@@ -36,8 +36,16 @@ func ParseData() AppData {
 	flag.Usage = func() {
 		writer := tabwriter.NewWriter(flag.CommandLine.Output(), 0, 4, 4, ' ', 0)
 		fmt.Fprintf(writer, "Chhoto URL CLI (c) 2025 Sayantan Santra\n")
-		fmt.Fprintf(writer, "Command line arguments to override config file values:\n")
+		fmt.Fprint(writer, "By default, config will be loaded from $XDG_CONFIG_HOME/chhoto/config.json\n")
+		fmt.Fprint(writer, "But these can be overridden by using the flags.\n")
 
+		fmt.Fprint(writer, "Subcommands:\n")
+		fmt.Fprint(writer, "\tnew <longurl> [<shorturl>]\tCreate a new shorturl. If shorturl is not provided, it will be generated automatically.\n")
+		fmt.Fprint(writer, "\tdelete <shorturl>\tDelete a given shorturl.\n")
+		fmt.Fprint(writer, "\texpand <shorturl>\tGet info about a particular shorturl.\n")
+		fmt.Fprint(writer, "\tgetall\tGet info about all shorturls in the server.\n")
+
+		fmt.Fprint(writer, "Flags:\n")
 		flag.VisitAll(func(f *flag.Flag) {
 			fmt.Fprintf(writer, "\t--%v\t%v\n", f.Name, f.Usage)
 		})
