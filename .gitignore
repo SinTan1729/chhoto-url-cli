@@ -7,7 +7,7 @@
 *.dll
 *.so
 *.dylib
-chhoto-url-cli
+chhoto
 
 # Test binary, built with `go test -c`
 *.test
