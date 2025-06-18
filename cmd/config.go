@@ -21,9 +21,10 @@ type AppData struct {
 	Subcommand string
 	Input1     string
 	Input2     string
+	Input3     string
 }
 
-func ParseData() AppData {
+func parseData() AppData {
 	log.SetFlags(0)
 
 	urlFlag := flag.String("url", "", "URL of the Chhoto URL server.")
@@ -40,7 +41,9 @@ func ParseData() AppData {
 		fmt.Fprint(writer, "But these can be overridden by using the flags.\n")
 
 		fmt.Fprint(writer, "Subcommands:\n")
-		fmt.Fprint(writer, "\tnew <longurl> [<shorturl>]\tCreate a new shorturl. If shorturl is not provided, it will be generated automatically.\n")
+		fmt.Fprint(writer, "\tnew <longurl> [<shorturl>] [<expiry-delay>]\tCreate a new shorturl.\n")
+		fmt.Fprint(writer, "\t\tIf shorturl is not provided, it will be generated automatically.\n")
+		fmt.Fprint(writer, "\t\tExpiry delay should be in seconds. Default value is 0, which means no expiry.\n")
 		fmt.Fprint(writer, "\tdelete <shorturl>\tDelete a given shorturl.\n")
 		fmt.Fprint(writer, "\texpand <shorturl>\tGet info about a particular shorturl.\n")
 		fmt.Fprint(writer, "\tgetall\tGet info about all shorturls in the server.\n")
@@ -51,7 +54,7 @@ func ParseData() AppData {
 		})
 		writer.Flush()
 	}
-	err := ParseFlags()
+	err := parseFlags()
 	if err != nil {
 		log.Fatalln("There was an error parsing command line flags.")
 	}
@@ -82,7 +85,7 @@ func ParseData() AppData {
 	}
 
 	args := flag.Args()
-	var arg1, arg2, arg3 string
+	var arg1, arg2, arg3, arg4 string
 	if len(args) == 0 {
 		log.Fatalln("No subcommand was supplied! Please see help.")
 	}
@@ -98,6 +101,9 @@ func ParseData() AppData {
 		arg3 = args[2]
 	}
 	if len(args) >= 4 {
+		arg4 = args[3]
+	}
+	if len(args) >= 5 {
 		log.Fatalln("Too many arguments were supplied! Please see help.")
 	}
 
@@ -106,16 +112,17 @@ func ParseData() AppData {
 		Subcommand: arg1,
 		Input1:     arg2,
 		Input2:     arg3,
+		Input3:     arg4,
 	}
 }
 
-func ParseFlags() error {
-	return ParseFlagSet(flag.CommandLine, os.Args[1:])
+func parseFlags() error {
+	return parseFlagSet(flag.CommandLine, os.Args[1:])
 }
 
 // ParseFlagSet works like flagset.Parse(), except positional
 // args and flag args can be specified in any order.
-func ParseFlagSet(flagset *flag.FlagSet, args []string) error {
+func parseFlagSet(flagset *flag.FlagSet, args []string) error {
 	var positionalArgs []string
 	for {
 		if err := flagset.Parse(args); err != nil {

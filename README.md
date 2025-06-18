@@ -7,4 +7,4 @@ in order to be accessible using this CLI tool.
 
 # Notes
 - This was just a learning project for me. I wanted to write something tangible using Golang. So, don't expect this to be maintained in the future.
-- I haven't used any external packages, everything is written using the Go Standard Library. I'll try to keep it this way.
+- I haven't used any external packages, everything is written in pure Go, using the Go Standard Library. I'll try to keep it this way.

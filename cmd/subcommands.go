@@ -1,34 +1,83 @@
 package main
 
-import "log"
+import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"io"
+	"log"
+	"net/http"
+	"os"
+	"text/tabwriter"
+)
 
-func CreateLink(appData AppData) {
-	// GET a JSON object
-	// id := 12
-	// var post placeholder
-	// resp, err := http.Get(fmt.Sprintf("https://jsonplaceholder.typicode.com/posts/%d", id))
-	// if err != nil {
-	// 	fmt.Println("could not connect to jsonplaceholder.typicode.com:", err)
-	// }
-	// defer resp.Body.Close()
-	// body, err := io.ReadAll(resp.Body)
-	// json.Unmarshal(body, &post)
-	// fmt.Println(post.Title)
-	log.SetFlags(0)
-	log.Fatalln("Create")
+type URLEntry struct {
+	ShortURL   string `json:"shortlink"`
+	LongURL    string `json:"longlink"`
+	Hits       uint   `json:"hits"`
+	ExpiryTime uint   `json:"expiry_time"`
 }
 
-func DeleteLink(appData AppData) {
+func createLink(appData AppData) {
+	log.SetFlags(0)
+	payLoad := fmt.Sprintf(`{"shorturl":"%v","longurl":"%v","expiry_delay":%v}`, appData.Input1, appData.Input2, appData.Input3)
+	req, _ := http.NewRequest("POST", appData.Config.URL+"/api/new", bytes.NewBufferString(payLoad))
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("X-API-Key", appData.Config.APIKey)
+
+	client := http.DefaultClient
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Fatalln("Error sending request!")
+	}
+	defer resp.Body.Close()
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatalln("Error reading response!")
+	}
+	fmt.Println(string(body))
+}
+
+func deleteLink(appData AppData) {
 	log.SetFlags(0)
 	log.Fatalln("Delete")
 }
 
-func ExpandLink(appData AppData) {
+func expandLink(appData AppData) {
 	log.SetFlags(0)
 	log.Fatalln("Expand")
 }
 
-func GetAll(appData AppData) {
+func getAll(appData AppData) {
 	log.SetFlags(0)
-	log.Fatalln("Get all")
+	req, _ := http.NewRequest("GET", appData.Config.URL+"/api/all", nil)
+	req.Header.Set("X-API-Key", appData.Config.APIKey)
+
+	client := http.DefaultClient
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Fatalln("Error sending request!")
+	}
+	defer resp.Body.Close()
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatalln("Error reading response!")
+	}
+
+	var entries []URLEntry
+	err = json.Unmarshal(body, &entries)
+	if err != nil {
+		log.Fatalln("Error reading JSON!")
+	}
+	if len(entries) == 0 {
+		fmt.Println("No links were returned.")
+	} else {
+		writer := tabwriter.NewWriter(os.Stdout, 0, 4, 4, ' ', 0)
+		fmt.Fprintf(writer, "Short URL\tLong URL\tHits\tExpiry\n")
+		fmt.Fprintf(writer, "---------\t--------\t----\t------\n")
+		for _, entry := range entries {
+			fmt.Fprintf(writer, "%v\t%v\t%v\t%v\n", entry.ShortURL, entry.LongURL, entry.Hits, entry.ExpiryTime)
+		}
+		writer.Flush()
+	}
 }

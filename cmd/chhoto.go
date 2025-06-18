@@ -9,25 +9,18 @@ import (
 
 func main() {
 	log.SetFlags(0)
-	appData := ParseData()
+	appData := parseData()
 
 	switch appData.Subcommand {
 	case "new":
-		CreateLink(appData)
+		createLink(appData)
 	case "delete":
-		DeleteLink(appData)
+		deleteLink(appData)
 	case "expand":
-		ExpandLink(appData)
+		expandLink(appData)
 	case "getall":
-		GetAll(appData)
+		getAll(appData)
 	default:
 		log.Fatalln(appData.Subcommand, "is not a valid subcommand. Please see help.")
 	}
-}
-
-type placeholder struct {
-	ID     int    `json:"id,omitempty"`
-	Title  string `json:"title"`
-	Body   string `json:"body"`
-	UserID int    `json:"userId"`
 }
