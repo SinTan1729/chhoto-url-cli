@@ -8,14 +8,15 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"slices"
 	"text/tabwriter"
 )
 
 type URLEntry struct {
 	ShortURL   string `json:"shortlink"`
 	LongURL    string `json:"longlink"`
-	Hits       uint   `json:"hits"`
-	ExpiryTime uint   `json:"expiry_time"`
+	Hits       int64  `json:"hits"`
+	ExpiryTime int64  `json:"expiry_time"`
 }
 
 func createLink(appData AppData) {
@@ -75,8 +76,8 @@ func getAll(appData AppData) {
 		writer := tabwriter.NewWriter(os.Stdout, 0, 4, 4, ' ', 0)
 		fmt.Fprintf(writer, "Short URL\tLong URL\tHits\tExpiry\n")
 		fmt.Fprintf(writer, "---------\t--------\t----\t------\n")
-		for _, entry := range entries {
-			fmt.Fprintf(writer, "%v\t%v\t%v\t%v\n", entry.ShortURL, entry.LongURL, entry.Hits, entry.ExpiryTime)
+		for _, entry := range slices.Backward(entries) {
+			fmt.Fprintf(writer, "%v\t%v\t%v\t%v\n", entry.ShortURL, entry.LongURL, entry.Hits, afterDur(entry.ExpiryTime))
 		}
 		writer.Flush()
 	}
