@@ -1,0 +1,49 @@
+.\" Manpage for movie-rename.
+.\" Contact sayantan[dot]santra689[at]gmail[dot]com to correct errors or typos.
+.TH man 1 "June 2025" "chhoto-url-cli"
+.SH NAME
+chhoto-url-cli
+.SH SYNOPSIS
+chhoto [--api-key <api-key>] [--url <url>] [--help] [--version]
+.TP
+chhoto getall
+.TP
+chhoto new <longurl> [<shorturl>] [<expiry-delay>]
+.TP
+chhoto expand <shorturl>
+.TP
+chhoto delete <shorturl>
+.SH DESCRIPTION
+Chhoto URL CLI is a CLI tool to be used to interact with Chhoto URL
+.SH SUBCOMMANDS
+.TP
+getall: Get info about all shorturls in the server.
+.TP
+new <longurl> [<shorturl>] [<expiry-delay>]: Create a new shorturl.
+  If shorturl is not provided, it will be generated automatically.
+  Expiry delay should be in seconds. Default value is 0, which means no expiry.
+.TP
+delete <shorturl>: Delete a given shorturl.
+.TP
+expand <shorturl>: Get info about a particular shorturl.
+.SH OPTIONS
+.TP
+--url <url>
+Provide URL, overrides URL from config file.
+.TP
+--api-key <api-key>
+Provide API key, overrides API key from config file.
+.TP
+--help
+Print help information.
+.TP
+--version
+Print version information.
+.SH CONFIG
+There should be a config file named config.json in the $XDG_CONFIG_HOME/chhoto/ directory.
+It should be a valid json file with "url" and "apiKey" entries. Needless to say, your Chhoto URL server must
+support API key authentication.
+.sp
+Config file might be avoided if --url and --api-key is provided.
+.SH AUTHOR
+Sayantan Santra sayantan[dot]santra689[at]gmail[dot]com
