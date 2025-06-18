@@ -93,6 +93,7 @@ func parseData() AppData {
 		arg1 = args[0]
 		arg2 = ""
 		arg3 = ""
+		arg4 = "0"
 	}
 	if len(args) >= 2 {
 		arg2 = args[1]

@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io"
 	"log"
 	"net/http"
 	"os"
@@ -19,54 +18,88 @@ type URLEntry struct {
 	ExpiryTime int64  `json:"expiry_time"`
 }
 
+type ExpandedURL struct {
+	ShortURL   string `json:"shorturl,omitempty"`
+	LongURL    string `json:"longurl,omitempty"`
+	Hits       int64  `json:"hits,omitempty"`
+	ExpiryTime int64  `json:"expiry_time"`
+}
+
+type JSONError struct {
+	Reason string `json:"reason"`
+}
+
 func createLink(appData AppData) {
 	log.SetFlags(0)
-	payLoad := fmt.Sprintf(`{"shorturl":"%v","longurl":"%v","expiry_delay":%v}`, appData.Input1, appData.Input2, appData.Input3)
+	payLoad := fmt.Sprintf(`{"shortlink":"%v","longlink":"%v","expiry_delay":%v}`, appData.Input2, appData.Input1, appData.Input3)
 	req, _ := http.NewRequest("POST", appData.Config.URL+"/api/new", bytes.NewBufferString(payLoad))
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("X-API-Key", appData.Config.APIKey)
 
-	client := http.DefaultClient
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Fatalln("Error sending request!")
+	ok, body := processReq(req, appData)
+	if ok {
+		var entry ExpandedURL
+		json.Unmarshal(body, &entry)
+		fmt.Println("Shortlink: ", entry.ShortURL)
+		fmt.Println("Expiry: ", expiryString(entry.ExpiryTime))
+	} else {
+		var err JSONError
+		json.Unmarshal(body, &err)
+		log.Fatalln(err.Reason)
 	}
-	defer resp.Body.Close()
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatalln("Error reading response!")
-	}
-	fmt.Println(string(body))
 }
 
 func deleteLink(appData AppData) {
 	log.SetFlags(0)
-	log.Fatalln("Delete")
+	if appData.Input2 != "" {
+		log.Fatalln("Too many arguments! Please see help.")
+	}
+
+	req, _ := http.NewRequest("DELETE", appData.Config.URL+"/api/del/"+appData.Input1, nil)
+	ok, body := processReq(req, appData)
+	if ok {
+		fmt.Printf("Shortlink %v was successfully deleted!", appData.Input1)
+	} else {
+		var err JSONError
+		json.Unmarshal(body, &err)
+		log.Fatalln(err.Reason)
+	}
 }
 
 func expandLink(appData AppData) {
 	log.SetFlags(0)
-	log.Fatalln("Expand")
+	if appData.Input2 != "" {
+		log.Fatalln("Too many arguments! Please see help.")
+	}
+
+	req, _ := http.NewRequest("POST", appData.Config.URL+"/api/expand", bytes.NewBufferString(appData.Input1))
+	ok, body := processReq(req, appData)
+	if ok {
+		var entry ExpandedURL
+		json.Unmarshal(body, &entry)
+		fmt.Println("Longlink: ", entry.LongURL)
+		fmt.Println("Hits: ", entry.Hits)
+		fmt.Println("Expiry: ", expiryString(entry.ExpiryTime))
+	} else {
+		var err JSONError
+		json.Unmarshal(body, &err)
+		log.Fatalln(err.Reason)
+	}
 }
 
 func getAll(appData AppData) {
 	log.SetFlags(0)
-	req, _ := http.NewRequest("GET", appData.Config.URL+"/api/all", nil)
-	req.Header.Set("X-API-Key", appData.Config.APIKey)
-
-	client := http.DefaultClient
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Fatalln("Error sending request!")
+	if appData.Input1 != "" {
+		log.Fatalln("Too many arguments! Please see help.")
 	}
-	defer resp.Body.Close()
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatalln("Error reading response!")
+
+	req, _ := http.NewRequest("GET", appData.Config.URL+"/api/all", nil)
+	ok, body := processReq(req, appData)
+	if !ok {
+		log.Fatalln("Received error from the server!")
 	}
 
 	var entries []URLEntry
-	err = json.Unmarshal(body, &entries)
+	err := json.Unmarshal(body, &entries)
 	if err != nil {
 		log.Fatalln("Error reading JSON!")
 	}
