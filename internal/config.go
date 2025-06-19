@@ -1,4 +1,4 @@
-package main
+package internal
 
 import (
 	"encoding/json"
@@ -24,7 +24,7 @@ type AppData struct {
 	Input3     string
 }
 
-func parseData() AppData {
+func ParseData() AppData {
 	log.SetFlags(0)
 
 	urlFlag := flag.String("url", "", "URL of the Chhoto URL server.")

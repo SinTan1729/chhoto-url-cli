@@ -4,22 +4,23 @@
 package main
 
 import (
+	"github.com/SinTan1729/chhoto-url-cli/internal"
 	"log"
 )
 
 func main() {
 	log.SetFlags(0)
-	appData := parseData()
+	appData := internal.ParseData()
 
 	switch appData.Subcommand {
 	case "new":
-		createLink(appData)
+		internal.CreateLink(appData)
 	case "delete":
-		deleteLink(appData)
+		internal.DeleteLink(appData)
 	case "expand":
-		expandLink(appData)
+		internal.ExpandLink(appData)
 	case "getall":
-		getAll(appData)
+		internal.GetAll(appData)
 	default:
 		log.Fatalln(appData.Subcommand, "is not a valid subcommand. Please see help.")
 	}

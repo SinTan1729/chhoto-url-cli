@@ -1,4 +1,4 @@
-package main
+package internal
 
 import (
 	"bytes"
@@ -29,7 +29,7 @@ type JSONError struct {
 	Reason string `json:"reason"`
 }
 
-func createLink(appData AppData) {
+func CreateLink(appData AppData) {
 	log.SetFlags(0)
 	payLoad := fmt.Sprintf(`{"shortlink":"%v","longlink":"%v","expiry_delay":%v}`, appData.Input2, appData.Input1, appData.Input3)
 	req, _ := http.NewRequest("POST", appData.Config.URL+"/api/new", bytes.NewBufferString(payLoad))
@@ -48,7 +48,7 @@ func createLink(appData AppData) {
 	}
 }
 
-func deleteLink(appData AppData) {
+func DeleteLink(appData AppData) {
 	log.SetFlags(0)
 	if appData.Input2 != "" {
 		log.Fatalln("Too many arguments! Please see help.")
@@ -65,7 +65,7 @@ func deleteLink(appData AppData) {
 	}
 }
 
-func expandLink(appData AppData) {
+func ExpandLink(appData AppData) {
 	log.SetFlags(0)
 	if appData.Input2 != "" {
 		log.Fatalln("Too many arguments! Please see help.")
@@ -86,7 +86,7 @@ func expandLink(appData AppData) {
 	}
 }
 
-func getAll(appData AppData) {
+func GetAll(appData AppData) {
 	log.SetFlags(0)
 	if appData.Input1 != "" {
 		log.Fatalln("Too many arguments! Please see help.")
