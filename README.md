@@ -37,6 +37,11 @@ lure in chhoto-url-cli
 By default, config will be loaded from $XDG_CONFIG_HOME/chhoto/config.json
 But these can be overridden by using the flags.
 
+The main syntax is the following
+```
+chhoto <subcommand> [<inputs>] [<--flags>]
+```
+
 Subcommands:
 1.  `new <longurl> [<shorturl>] [<expiry-delay>]`  
     Creates a new shorturl.  
