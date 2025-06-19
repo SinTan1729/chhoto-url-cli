@@ -58,6 +58,7 @@ Flags:
     `--api-key`    API Key of the Chhoto URL server.  
     `--url`        URL of the Chhoto URL server.  
     `--version`    Prints the version.
+    `-h|--help`    Prints help.
 
 # Notes
 - This was just a learning project for me. I wanted to write something tangible using Golang. So, don't expect this to be maintained in the future.

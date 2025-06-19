@@ -4,7 +4,7 @@
 .SH NAME
 chhoto-url-cli
 .SH SYNOPSIS
-chhoto [--api-key <api-key>] [--url <url>] [--help] [--version]
+chhoto [--api-key <api-key>] [--url <url>] [-h|--help] [--version]
 .TP
 chhoto getall
 .TP
@@ -26,7 +26,7 @@ new <longurl> [<shorturl>] [<expiry-delay>]: Create a new shorturl.
 delete <shorturl>: Delete a given shorturl.
 .TP
 expand <shorturl>: Get info about a particular shorturl.
-.SH OPTIONS
+.SH FLAGS
 .TP
 --url <url>
 Provide URL, overrides URL from config file.
@@ -34,7 +34,7 @@ Provide URL, overrides URL from config file.
 --api-key <api-key>
 Provide API key, overrides API key from config file.
 .TP
---help
+-h|--help
 Print help information.
 .TP
 --version
