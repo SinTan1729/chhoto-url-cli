@@ -2,7 +2,7 @@ PREFIX := /usr/local
 PKGNAME := chhoto
 
 build:
-	go build -ldflags="-s -w" -o chhoto .
+	go build -ldflags="-s -w" -o chhoto
 
 install: build
 	install -Dm755 $(PKGNAME) "$(DESTDIR)$(PREFIX)/bin/$(PKGNAME)"
