@@ -3,7 +3,7 @@ This is a companion CLI tool for [Chhoto URL](https://github.com/SinTan1729/chho
 a Chhoto URL server.
 
 All the functions of this tool can be replicated using `curl`, but this is supposed to be easier to use. The server needs to have an API key
-in order to be accessible using this CLI tool.
+in order to be accessible using this CLI tool. Password based usage is supported, but discouraged.
 
 # Installation
 ## Installation from source
@@ -56,6 +56,7 @@ Subcommands:
 
 Flags:  
     `--api-key`    API Key of the Chhoto URL server.  
+    `--password`   Password for the Chhoto URL server.
     `--url`        URL of the Chhoto URL server.  
     `--version`    Prints the version.
     `-h|--help`    Prints help.
