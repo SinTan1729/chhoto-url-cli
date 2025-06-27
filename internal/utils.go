@@ -1,11 +1,13 @@
 package internal
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"log"
 	"math"
 	"net/http"
+	"net/http/cookiejar"
 	"time"
 )
 
@@ -33,10 +35,38 @@ func afterDur(then int64) string {
 	return "Something went wrong!"
 }
 
-func processReq(req *http.Request, appData AppData) (bool, []byte) {
-	req.Header.Set("X-API-Key", appData.Config.APIKey)
+func doPasswordLogin(client *http.Client, config Config) {
+	if config.Password == "" {
+		fmt.Print("Empty password was supplied! Trying anyway.")
+	}
+	req, _ := http.NewRequest("POST", config.URL+"/api/login", bytes.NewBufferString(config.Password))
+	jar, _ := cookiejar.New(nil)
+	client.Jar = jar
 
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Fatalln("Error trying to log in!")
+	}
+	defer resp.Body.Close()
+
+	if err != nil {
+		log.Fatalln("Error reading response from login route!")
+	}
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+		log.Fatalln("Error logging in! Check your password.")
+	}
+}
+
+func processReq(req *http.Request, config Config) (bool, []byte) {
 	client := http.DefaultClient
+	if config.APIKey == "" {
+		fmt.Println("API key wasn't supplied. Trying password based login.")
+		fmt.Println("...")
+		doPasswordLogin(client, config)
+	} else {
+		req.Header.Set("X-API-Key", config.APIKey)
+	}
+
 	resp, err := client.Do(req)
 	if err != nil {
 		log.Fatalln("Error sending request!")

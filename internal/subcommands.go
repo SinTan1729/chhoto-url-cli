@@ -35,7 +35,7 @@ func CreateLink(appData AppData) {
 	req, _ := http.NewRequest("POST", appData.Config.URL+"/api/new", bytes.NewBufferString(payLoad))
 	req.Header.Set("Content-Type", "application/json")
 
-	ok, body := processReq(req, appData)
+	ok, body := processReq(req, appData.Config)
 	if ok {
 		var entry ExpandedURL
 		json.Unmarshal(body, &entry)
@@ -55,7 +55,7 @@ func DeleteLink(appData AppData) {
 	}
 
 	req, _ := http.NewRequest("DELETE", appData.Config.URL+"/api/del/"+appData.Input1, nil)
-	ok, body := processReq(req, appData)
+	ok, body := processReq(req, appData.Config)
 	if ok {
 		fmt.Printf("Shortlink %v was successfully deleted!", appData.Input1)
 	} else {
@@ -70,9 +70,12 @@ func ExpandLink(appData AppData) {
 	if appData.Input2 != "" {
 		log.Fatalln("Too many arguments! Please see help.")
 	}
+	if appData.Config.APIKey == "" {
+		log.Fatalln("The expand subcommand only works with an API key.")
+	}
 
 	req, _ := http.NewRequest("POST", appData.Config.URL+"/api/expand", bytes.NewBufferString(appData.Input1))
-	ok, body := processReq(req, appData)
+	ok, body := processReq(req, appData.Config)
 	if ok {
 		var entry ExpandedURL
 		json.Unmarshal(body, &entry)
@@ -93,7 +96,7 @@ func GetAll(appData AppData) {
 	}
 
 	req, _ := http.NewRequest("GET", appData.Config.URL+"/api/all", nil)
-	ok, body := processReq(req, appData)
+	ok, body := processReq(req, appData.Config)
 	if !ok {
 		log.Fatalln("Received error from the server!")
 	}

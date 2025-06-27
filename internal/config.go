@@ -12,8 +12,9 @@ import (
 const version = "0.1.0"
 
 type Config struct {
-	URL    string `json:"url"`
-	APIKey string `json:"apiKey"`
+	URL      string `json:"url"`
+	APIKey   string `json:"apiKey"`
+	Password string `json:"password"`
 }
 
 type AppData struct {
@@ -28,7 +29,8 @@ func ParseData() AppData {
 	log.SetFlags(0)
 
 	urlFlag := flag.String("url", "", "URL of the Chhoto URL server.")
-	apiFlag := flag.String("api-key", "", "API Key of the Chhoto URL server.")
+	apiFlag := flag.String("api-key", "", "API Key of the Chhoto URL server (preferred).")
+	passFlag := flag.String("password", "", "Password for the Chhoto URL server.")
 	flag.BoolFunc("version", "Prints the version.", func(_ string) error {
 		fmt.Print("v", version, "\n")
 		os.Exit(0)
@@ -60,7 +62,7 @@ func ParseData() AppData {
 	}
 
 	config := Config{}
-	if *urlFlag == "" || *apiFlag == "" {
+	if *urlFlag == "" || *apiFlag == "" || *passFlag == "" {
 		configDir, ok := os.LookupEnv("XDG_CONFIG_HOME")
 		if !ok {
 			configDir = "~/.config"
@@ -82,6 +84,9 @@ func ParseData() AppData {
 	}
 	if *apiFlag != "" {
 		config.APIKey = *apiFlag
+	}
+	if *passFlag != "" {
+		config.Password = *passFlag
 	}
 
 	args := flag.Args()
