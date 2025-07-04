@@ -53,6 +53,8 @@ Subcommands:
     Prints info about a particular shorturl.
 1.  `getall`  
     Prints info about all shorturls in the server.
+1.  `getconfig`  
+    Prints the backend config.
 
 Flags:  
     `--api-key`    API Key of the Chhoto URL server.  
