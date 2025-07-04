@@ -21,6 +21,8 @@ func main() {
 		internal.ExpandLink(appData)
 	case "getall":
 		internal.GetAll(appData)
+	case "getconfig":
+		internal.GetConfig(appData)
 	default:
 		log.Fatalln(appData.Subcommand, "is not a valid subcommand. Please see help.")
 	}

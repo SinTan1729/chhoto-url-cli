@@ -25,6 +25,17 @@ type ExpandedURL struct {
 	ExpiryTime int64  `json:"expiry_time"`
 }
 
+type BackendConfig struct {
+	Version        string `json:"version"`
+	SiteURL        string `json:"site_url"`
+	CapitalLetters bool   `json:"allow_capital_letters"`
+	PublicMode     bool   `json:"public_mode"`
+	PMExpiryDelay  int64  `json:"public_mode_expiry_delay"`
+	SlugStyle      string `json:"slug_style"`
+	SlugLength     int64  `json:"slug_length"`
+	TryLongerSlug  bool   `json:"try_longer_slug"`
+}
+
 type JSONError struct {
 	Reason string `json:"reason"`
 }
@@ -82,6 +93,38 @@ func ExpandLink(appData AppData) {
 		fmt.Println("Longlink: ", entry.LongURL)
 		fmt.Println("Hits: ", entry.Hits)
 		fmt.Println("Expiry: ", expiryString(entry.ExpiryTime))
+	} else {
+		var err JSONError
+		json.Unmarshal(body, &err)
+		log.Fatalln(err.Reason)
+	}
+}
+
+func GetConfig(appData AppData) {
+	log.SetFlags(0)
+	if appData.Input1 != "" {
+		log.Fatalln("Too many arguments! Please see help.")
+	}
+
+	req, _ := http.NewRequest("GET", appData.Config.URL+"/api/getconfig", nil)
+	ok, body := processReq(req, appData.Config)
+	if ok {
+		var entry BackendConfig
+		json.Unmarshal(body, &entry)
+		fmt.Println("Version: ", entry.Version)
+		if entry.SiteURL != "" {
+			fmt.Println("Site URL: ", entry.SiteURL)
+		}
+		fmt.Println("Allow Capital Letters: ", entry.CapitalLetters)
+		fmt.Println("Public Mode: ", entry.PublicMode)
+		if entry.PMExpiryDelay > 0 {
+			fmt.Println("Public Mode Expiry Delay: ", entry.PMExpiryDelay)
+		}
+		fmt.Println("Slug Style: ", entry.SlugStyle)
+		if entry.SlugStyle == "UID" {
+			fmt.Println("Slug Length: ", entry.SlugLength)
+			fmt.Println("Try Longer Slug: ", entry.TryLongerSlug)
+		}
 	} else {
 		var err JSONError
 		json.Unmarshal(body, &err)

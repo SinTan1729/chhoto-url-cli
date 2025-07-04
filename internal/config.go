@@ -49,6 +49,7 @@ func ParseData() AppData {
 		fmt.Fprint(writer, "\tdelete <shorturl>\tDelete a given shorturl.\n")
 		fmt.Fprint(writer, "\texpand <shorturl>\tGet info about a particular shorturl.\n")
 		fmt.Fprint(writer, "\tgetall\tGet info about all shorturls in the server.\n")
+		fmt.Fprint(writer, "\tgetconfig\tPrint the backend config.\n")
 
 		fmt.Fprint(writer, "Flags:\n")
 		flag.VisitAll(func(f *flag.Flag) {
