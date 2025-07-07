@@ -58,7 +58,7 @@ Subcommands:
 
 Flags:  
     `--api-key`    API Key of the Chhoto URL server.  
-    `--password`   Password for the Chhoto URL server.
+    `--password`   Password for the Chhoto URL server. It may also be passed interactively.
     `--url`        URL of the Chhoto URL server.  
     `--version`    Prints the version.
     `-h|--help`    Prints help.
