@@ -30,7 +30,7 @@ func ParseData() AppData {
 
 	urlFlag := flag.String("url", "", "URL of the Chhoto URL server.")
 	apiFlag := flag.String("api-key", "", "API Key of the Chhoto URL server (preferred).")
-	passFlag := flag.String("password", "", "Password for the Chhoto URL server.")
+	passFlag := flag.String("password", "", "Password for the Chhoto URL server. It may also be passed interactively.")
 	flag.BoolFunc("version", "Prints the version.", func(_ string) error {
 		fmt.Print("v", version, "\n")
 		os.Exit(0)
@@ -63,7 +63,7 @@ func ParseData() AppData {
 	}
 
 	config := Config{}
-	if *urlFlag == "" || *apiFlag == "" || *passFlag == "" {
+	if *urlFlag == "" {
 		configDir, ok := os.LookupEnv("XDG_CONFIG_HOME")
 		if !ok {
 			configDir = "~/.config"
@@ -78,16 +78,21 @@ func ParseData() AppData {
 		if err != nil {
 			fmt.Println("error:", err)
 		}
-	}
-
-	if *urlFlag != "" {
+	} else {
+		// Since an url was provided, we assume that new details
+		// are needed which are not in config
 		config.URL = *urlFlag
-	}
-	if *apiFlag != "" {
 		config.APIKey = *apiFlag
-	}
-	if *passFlag != "" {
 		config.Password = *passFlag
+		if *apiFlag == "" && *passFlag == "" {
+			var pass string
+			fmt.Println("No API key was password was provided.")
+			fmt.Print("Type your password here: ")
+			fmt.Print("\033[8m") // Hide input
+			fmt.Scanln(&pass)
+			fmt.Print("\033[28m") // Show input
+			config.Password = pass
+		}
 	}
 
 	args := flag.Args()
