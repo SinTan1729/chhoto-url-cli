@@ -1,3 +1,9 @@
+<!-- SPDX-FileCopyrightText: 2025 Sayantan Santra <sayantan.santra689@gmail.com> -->
+<!-- SPDX-License-Identifier: MIT -->
+[![maintainer-badge](https://img.shields.io/badge/maintainer-SinTan1729-blue)](https://github.com/SinTan1729)
+[![latest-release-badge](https://img.shields.io/github/v/release/SinTan1729/chhoto-url-cli?label=latest%20release)](https://github.com/SinTan1729/chhoto-url-cli/releases/latest)
+[![license-badge](https://img.shields.io/github/license/SinTan1729/chhoto-url)](https://spdx.org/licenses/MIT.html)
+
 # Chhoto URL CLI
 This is a companion CLI tool for [Chhoto URL](https://github.com/SinTan1729/chhoto-url). It provides simple commands for interacting with
 a Chhoto URL server.
