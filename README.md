@@ -11,12 +11,12 @@ in order to be accessible using this CLI tool. Password based usage is supported
 ```
 git clone https://github.com/SinTan1729/chhoto-url-cli
 ```
-1. Install.
+2. Install.
 ```
 cd chhoto-url-cli
 make install
 ```
-1. You can uninstall by running `make uninstall`.
+3. You can uninstall by running `make uninstall`.
 
 ## Installation from AUR
 Use the AUR package [`chhoto-url-cli-bin`](https://aur.archlinux.org/packages/chhoto-url-cli-bin).
@@ -24,11 +24,11 @@ Use the AUR package [`chhoto-url-cli-bin`](https://aur.archlinux.org/packages/ch
 ## Installation from LURE
 This should (at least in theory) work for every distro, and should be similar to AUR in terms of experience.
 1. Install `LURE` from [lure.sh](https://lure.sh).
-1. Add my personal repo to it.
+2. Add my personal repo to it.
 ```
 lure addrepo -n SinTan1729 -u https://github.com/SinTan1729/lure-repo
 ```
-1. Install `chhoto-url-cli`
+3. Install `chhoto-url-cli`
 ```
 lure in chhoto-url-cli
 ```
