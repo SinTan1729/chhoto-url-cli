@@ -88,9 +88,7 @@ func ParseData() AppData {
 			var pass string
 			fmt.Println("No API key was password was provided.")
 			fmt.Print("Type your password here: ")
-			fmt.Print("\033[8m") // Hide input
-			fmt.Scanln(&pass)
-			fmt.Print("\033[28m") // Show input
+			pass = readPass()
 			config.Password = pass
 		}
 	}

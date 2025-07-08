@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"bufio"
 	"bytes"
 	"fmt"
 	"io"
@@ -8,6 +9,8 @@ import (
 	"math"
 	"net/http"
 	"net/http/cookiejar"
+	"os"
+	"os/exec"
 	"time"
 )
 
@@ -86,4 +89,32 @@ func expiryString(t int64) string {
 		expiry = time.Unix(t, 0).String()
 	}
 	return expiry
+}
+
+func readPass() string {
+	// Disable printing to terminal and handle all characters
+	exec.Command("stty", "-F", "/dev/tty", "cbreak", "min", "1").Run()
+	exec.Command("stty", "-F", "/dev/tty", "-echo").Run()
+	var rs []rune
+	inp := bufio.NewReader(os.Stdin)
+	for {
+		r, _, err := inp.ReadRune()
+		if err != nil {
+			panic(err)
+		}
+		if r == '\n' {
+			fmt.Print("\n")
+			break
+		} else if r == '\u007f' { // backspace
+			if len(rs) > 0 {
+				fmt.Printf("\033[1D\033[K")
+				rs = rs[:len(rs)-1]
+			}
+			continue
+		} else {
+			fmt.Print("*")
+			rs = append(rs, r)
+		}
+	}
+	return string(rs)
 }
