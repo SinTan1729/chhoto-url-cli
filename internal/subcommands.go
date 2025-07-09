@@ -47,15 +47,27 @@ func CreateLink(appData AppData) {
 	req.Header.Set("Content-Type", "application/json")
 
 	ok, body := processReq(req, appData.Config)
-	if ok {
-		var entry ExpandedURL
-		json.Unmarshal(body, &entry)
-		fmt.Println("Shortlink: ", entry.ShortURL)
-		fmt.Println("Expiry: ", expiryString(entry.ExpiryTime))
+	// This is for password based login
+	// We kinda need to do some extra steps
+	if appData.Config.APIKey == "" {
+		if ok {
+			fmt.Println("Shortlink:", string(body))
+			fmt.Println("Expiry time is not reported for password based link creation.")
+			fmt.Println("Run getall for that information.")
+		} else {
+			log.Fatalln(string(body))
+		}
 	} else {
-		var err JSONError
-		json.Unmarshal(body, &err)
-		log.Fatalln(err.Reason)
+		if ok {
+			var entry ExpandedURL
+			json.Unmarshal(body, &entry)
+			fmt.Println("Shortlink: ", entry.ShortURL)
+			fmt.Println("Expiry: ", expiryString(entry.ExpiryTime))
+		} else {
+			var err JSONError
+			json.Unmarshal(body, &err)
+			log.Fatalln(err.Reason)
+		}
 	}
 }
 

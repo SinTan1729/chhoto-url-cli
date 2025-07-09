@@ -63,8 +63,6 @@ func doPasswordLogin(client *http.Client, config Config) {
 func processReq(req *http.Request, config Config) (bool, []byte) {
 	client := http.DefaultClient
 	if config.APIKey == "" {
-		fmt.Println("API key wasn't supplied. Trying password based login.")
-		fmt.Println("...")
 		doPasswordLogin(client, config)
 	} else {
 		req.Header.Set("X-API-Key", config.APIKey)
