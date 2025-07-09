@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2025 Sayantan Santra <sayantan.santra689@gmail.com>
+// SPDX-License-Identifier: MIT
+
 package internal
 
 import (
