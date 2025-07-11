@@ -83,7 +83,7 @@ func DeleteLink(appData AppData) {
 	req, _ := http.NewRequest("DELETE", appData.Config.URL+"/api/del/"+appData.Input1, nil)
 	ok, body := processReq(req, appData.Config)
 	if ok {
-		fmt.Printf("Shortlink %v was successfully deleted!", appData.Input1)
+		fmt.Printf("Shortlink %v was successfully deleted!\n", appData.Input1)
 	} else {
 		var err JSONError
 		json.Unmarshal(body, &err)
