@@ -103,11 +103,22 @@ func ExpandLink(appData AppData) {
 	req, _ := http.NewRequest("POST", appData.Config.URL+"/api/expand", bytes.NewBufferString(appData.Input1))
 	ok, body := processReq(req, appData.Config)
 	if ok {
+		writer := tabwriter.NewWriter(os.Stdout, 0, 4, 4, ' ', 0)
+		defer writer.Flush()
 		var entry ExpandedURL
 		json.Unmarshal(body, &entry)
-		fmt.Println("Longlink: ", entry.LongURL)
-		fmt.Println("Hits: ", entry.Hits)
-		fmt.Println("Expiry: ", expiryString(entry.ExpiryTime))
+		printpos := 0
+		for printpos < len(entry.LongURL) {
+			printlen := min(len(entry.LongURL)-printpos, 80)
+			if printpos == 0 {
+				fmt.Fprintln(writer, "Longlink:\t", entry.LongURL[printpos:printlen])
+			} else {
+				fmt.Fprintln(writer, "\t", entry.LongURL[printpos:printpos+printlen])
+			}
+			printpos += printlen
+		}
+		fmt.Fprintln(writer, "Hits:\t", entry.Hits)
+		fmt.Fprintln(writer, "Expiry:\t", expiryString(entry.ExpiryTime))
 	} else {
 		var err JSONError
 		json.Unmarshal(body, &err)
@@ -168,11 +179,20 @@ func GetAll(appData AppData) {
 		fmt.Println("No links were returned.")
 	} else {
 		writer := tabwriter.NewWriter(os.Stdout, 0, 4, 4, ' ', 0)
+		defer writer.Flush()
 		fmt.Fprintf(writer, "Short URL\tLong URL\tHits\tExpiry\n")
 		fmt.Fprintf(writer, "---------\t--------\t----\t------\n")
 		for _, entry := range slices.Backward(entries) {
-			fmt.Fprintf(writer, "%v\t%v\t%v\t%v\n", entry.ShortURL, entry.LongURL, entry.Hits, afterDur(entry.ExpiryTime))
+			printpos := 0
+			for printpos < len(entry.LongURL) {
+				printlen := min(len(entry.LongURL)-printpos, 80)
+				if printpos == 0 {
+					fmt.Fprintf(writer, "%v\t%v\t%v\t%v\n", entry.ShortURL, entry.LongURL[printpos:printlen], entry.Hits, afterDur(entry.ExpiryTime))
+				} else {
+					fmt.Fprintf(writer, "\t%v\t\t\n", entry.LongURL[printpos:printpos+printlen])
+				}
+				printpos += printlen
+			}
 		}
-		writer.Flush()
 	}
 }
