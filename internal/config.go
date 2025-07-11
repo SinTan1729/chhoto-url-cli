@@ -12,7 +12,7 @@ import (
 	"text/tabwriter"
 )
 
-const version = "0.4.2"
+const version = "0.4.3"
 
 type Config struct {
 	URL      string `json:"url"`
