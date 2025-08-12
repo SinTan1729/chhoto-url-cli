@@ -3,7 +3,7 @@
 
 [![maintainer-badge](https://img.shields.io/badge/maintainer-SinTan1729-blue)](https://github.com/SinTan1729)
 [![latest-release-badge](https://img.shields.io/github/v/release/SinTan1729/chhoto-url-cli?label=latest%20release)](https://github.com/SinTan1729/chhoto-url-cli/releases/latest)
-[![license-badge](https://img.shields.io/github/license/SinTan1729/chhoto-url)](https://spdx.org/licenses/MIT.html)
+[![license-badge](https://img.shields.io/github/license/SinTan1729/chhoto-url-cli)](https://spdx.org/licenses/MIT.html)
 
 # Chhoto URL CLI
 
